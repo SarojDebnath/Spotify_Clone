@@ -38,7 +38,6 @@ async function getSongs(folder) {
                             <img class="invert" src="img/music.svg" alt="">
                             <div class="info">
                                 <div>${song.replaceAll("%20", " ")}</div>
-                                <div>Saroj</div>
                             </div>
                             <div class="playnow">
                                 <span>Play Now</span>
@@ -78,7 +77,7 @@ async function displayAlbums() {
     let array = Array.from(anchors)
     for (let index = 0; index < array.length; index++) {
         const e = array[index];
-        if (e.href.includes("/songs")) {
+        if (e.href.includes("/songs") && !e.href.includes(".htaccess")) {
             let folder = e.href.split("/").slice(-2)[0]
             let metadata = await fetch(`/songs/${folder}/info.json`);
             let response = await metadata.json();
@@ -91,7 +90,7 @@ async function displayAlbums() {
                             <p>${response.description}</p>
                         </div>`
         }
-    }
+    } 
 
     //Load the playlist when card is clicked
     Array.from(document.getElementsByClassName("card")).forEach(e => {
@@ -161,6 +160,9 @@ async function main() {
     //Listener for volume
     document.querySelector(".range").getElementsByTagName("input")[0].addEventListener("change", (e) => {
         currentsong.volume = parseInt(e.target.value) / 100
+        if (currentsong.volume > 0){
+            document.querySelector(".volume>img").src=document.querySelector(".volume>img").src.replace("mute.svg","volume.svg")
+        }
     })
     //Mute event listener
     document.querySelector(".volume>img").addEventListener("click", e=>{
